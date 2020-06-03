@@ -117,7 +117,9 @@ class _FirstOnboardingScreenState extends State<FirstOnboardingScreen> {
                 ),
               ),
               RaisedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(_createRoute());
+                },
                 child: Text(
                   'Skip',
                   style: TextStyle(
