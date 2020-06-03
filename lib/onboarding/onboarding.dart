@@ -31,6 +31,19 @@ class _FirstOnboardingScreenState extends State<FirstOnboardingScreen> {
 
   final _controller = PageController(initialPage: 0);
 
+  Route _createRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => SplashPage(),
+      transitionDuration: Duration(seconds: 1),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(
+          opacity: animation,
+          child: child,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,7 +111,7 @@ class _FirstOnboardingScreenState extends State<FirstOnboardingScreen> {
                           duration: Duration(milliseconds: 300),
                           curve: Curves.ease);
                     } else {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => SplashPage()));
+                      Navigator.of(context).push(_createRoute());
                     }
                   },
                 ),
