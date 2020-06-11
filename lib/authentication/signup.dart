@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
-import 'package:darkPix/authentication/signup.dart';
+import 'package:darkPix/authentication/signin.dart';
 
-class SignInScreen extends StatefulWidget {
+class SignupScreen extends StatefulWidget {
   @override
-  _SignInScreenState createState() => _SignInScreenState();
+  _SignUpScreenState createState() => _SignUpScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _SignUpScreenState extends State<SignupScreen> {
   bool bShowPassword = false;
+  bool bConfirmPassword = false;
   bool rememberMe = false;
 
   @override
@@ -28,9 +29,18 @@ class _SignInScreenState extends State<SignInScreen> {
       child: Column(
         children: <Widget>[
           _logo(),
-          _userId(),
-          _password(),
-          _rememberAndForgotPassword(),
+          _textInput('Name'),
+          _textInput('Email ID'),
+          _password('Password', () {
+            setState(() {
+              bShowPassword = !bShowPassword;
+            });
+          }, bShowPassword),
+          _password('Confirm Password', () {
+            setState(() {
+              bConfirmPassword = !bConfirmPassword;
+            });
+          }, bConfirmPassword),
           _signinButton(),
           _socialLoginButtons(),
           _toSignupPage()
@@ -45,17 +55,17 @@ class _SignInScreenState extends State<SignInScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(top: 150),
-          child: Image.asset(
-            'lib/assets/img/logo.png',
-            scale: 0.7,
+          padding: EdgeInsets.only(top: 40),
+          child: Text(
+            'Sign Up',
+            style: TextStyle(color: Colors.white, fontSize: 24),
           ),
         ),
       ],
     );
   }
 
-  _userId() {
+  _textInput(String text) {
     return Padding(
       padding: EdgeInsets.only(top: 30),
       child: SizedBox(
@@ -69,7 +79,7 @@ class _SignInScreenState extends State<SignInScreen> {
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.white),
               ),
-              labelText: 'User ID',
+              labelText: text,
               labelStyle: TextStyle(color: Colors.white),
             ),
             autofocus: false,
@@ -77,14 +87,14 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  _password() {
+  _password(String text, Function func, bool bShow) {
     return Padding(
       padding: EdgeInsets.only(top: 30),
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.8,
         child: TextField(
           style: TextStyle(color: Colors.white),
-          obscureText: !bShowPassword,
+          obscureText: bShow,
           decoration: InputDecoration(
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.white),
@@ -92,10 +102,10 @@ class _SignInScreenState extends State<SignInScreen> {
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.white),
             ),
-            labelText: 'Password',
+            labelText: text,
             labelStyle: TextStyle(color: Colors.white),
             suffixIcon: IconButton(
-              icon: bShowPassword
+              icon: bShow
                   ? Icon(
                       Icons.remove_red_eye,
                       color: Colors.white,
@@ -105,9 +115,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       color: Colors.white,
                     ),
               onPressed: () {
-                setState(() {
-                  bShowPassword = !bShowPassword;
-                });
+                func();
               },
             ),
           ),
@@ -171,7 +179,7 @@ class _SignInScreenState extends State<SignInScreen> {
           color: Colors.white,
           onPressed: () {},
           child: Text(
-            'Sign In',
+            'Sign Up',
             style: TextStyle(fontSize: 16),
           ),
         ),
@@ -196,7 +204,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
               ),
               Text(
-                'Sign in using',
+                'Sign up using',
                 style: TextStyle(color: Colors.white),
               ),
               Padding(
@@ -261,12 +269,12 @@ class _SignInScreenState extends State<SignInScreen> {
                   Navigator.of(context).push(
                     PageRouteBuilder(
                       pageBuilder: (context, animation, secondaryAnimation) =>
-                          SignupScreen(),
+                          SignInScreen(),
                     ),
                   );
                 },
                 child: Text(
-                  'Sign Up',
+                  'Sign In',
                   style: TextStyle(
                       decoration: TextDecoration.underline,
                       decorationStyle: TextDecorationStyle.dashed,
