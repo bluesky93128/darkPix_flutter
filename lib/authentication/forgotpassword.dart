@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:darkPix/authentication/signin.dart';
 
-class SignupScreen extends StatefulWidget {
+class ForgotPasswordScreen extends StatefulWidget {
   @override
-  _SignUpScreenState createState() => _SignUpScreenState();
+  _ForgotPasswordScreenState createState() => _ForgotPasswordScreenState();
 }
 
-class _SignUpScreenState extends State<SignupScreen> {
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   bool bShowPassword = false;
-  bool bConfirmPassword = false;
   bool rememberMe = false;
 
   @override
@@ -29,21 +28,9 @@ class _SignUpScreenState extends State<SignupScreen> {
       child: Column(
         children: <Widget>[
           _logo(),
-          _textInput('Name'),
-          _textInput('Email ID'),
-          _password('Password', () {
-            setState(() {
-              bShowPassword = !bShowPassword;
-            });
-          }, bShowPassword),
-          _password('Confirm Password', () {
-            setState(() {
-              bConfirmPassword = !bConfirmPassword;
-            });
-          }, bConfirmPassword),
+          _userId(),
           _signinButton(),
-          _socialLoginButtons(),
-          _toSignupPage()
+          _toSignupPage(),
         ],
       ),
     );
@@ -51,21 +38,18 @@ class _SignUpScreenState extends State<SignupScreen> {
 
   _logo() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(top: 40),
-          child: Text(
-            'Sign Up',
-            style: TextStyle(color: Colors.white, fontSize: 24),
-          ),
-        ),
+            padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width * 0.1, 90, 0, 0),
+            child: Text('Forgot Password',
+                style: TextStyle(fontSize: 30, color: Colors.white))),
       ],
     );
   }
 
-  _textInput(String text) {
+  _userId() {
     return Padding(
       padding: EdgeInsets.only(top: 30),
       child: SizedBox(
@@ -79,7 +63,7 @@ class _SignUpScreenState extends State<SignupScreen> {
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.white),
               ),
-              labelText: text,
+              labelText: 'Email Id',
               labelStyle: TextStyle(color: Colors.white),
             ),
             autofocus: false,
@@ -87,14 +71,14 @@ class _SignUpScreenState extends State<SignupScreen> {
     );
   }
 
-  _password(String text, Function func, bool bShow) {
+  _password() {
     return Padding(
       padding: EdgeInsets.only(top: 30),
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.8,
         child: TextField(
           style: TextStyle(color: Colors.white),
-          obscureText: bShow,
+          obscureText: !bShowPassword,
           decoration: InputDecoration(
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.white),
@@ -102,10 +86,10 @@ class _SignUpScreenState extends State<SignupScreen> {
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.white),
             ),
-            labelText: text,
+            labelText: 'Password',
             labelStyle: TextStyle(color: Colors.white),
             suffixIcon: IconButton(
-              icon: bShow
+              icon: bShowPassword
                   ? Icon(
                       Icons.remove_red_eye,
                       color: Colors.white,
@@ -115,7 +99,9 @@ class _SignUpScreenState extends State<SignupScreen> {
                       color: Colors.white,
                     ),
               onPressed: () {
-                func();
+                setState(() {
+                  bShowPassword = !bShowPassword;
+                });
               },
             ),
           ),
@@ -179,7 +165,7 @@ class _SignUpScreenState extends State<SignupScreen> {
           color: Colors.white,
           onPressed: () {},
           child: Text(
-            'Sign Up',
+            'Reset',
             style: TextStyle(fontSize: 16),
           ),
         ),
@@ -204,7 +190,7 @@ class _SignUpScreenState extends State<SignupScreen> {
                 ),
               ),
               Text(
-                'Sign up using',
+                'Sign in using',
                 style: TextStyle(color: Colors.white),
               ),
               Padding(
@@ -257,11 +243,11 @@ class _SignUpScreenState extends State<SignupScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(top: 30),
+          padding: EdgeInsets.only(top: 48),
           child: Row(
             children: <Widget>[
               Text(
-                'Don\'t have an account?  ',
+                'Back to  ',
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
               GestureDetector(

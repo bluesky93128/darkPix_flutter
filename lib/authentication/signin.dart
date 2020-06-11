@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:darkPix/authentication/signup.dart';
+import 'package:darkPix/authentication/forgotpassword.dart';
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -152,9 +153,19 @@ class _SignInScreenState extends State<SignInScreen> {
         Padding(
           padding: EdgeInsets.fromLTRB(
               0, 10, MediaQuery.of(context).size.width * 0.1, 0),
-          child: Text(
-            'Forgot Password?',
-            style: TextStyle(color: Colors.white),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      ForgotPasswordScreen(),
+                ),
+              );
+            },
+            child: Text(
+              'Forgot Password?',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         )
       ],
