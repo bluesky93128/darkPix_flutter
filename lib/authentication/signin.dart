@@ -182,7 +182,7 @@ class _SignInScreenState extends State<SignInScreen> {
         child: RaisedButton(
           color: Colors.white,
           onPressed: () {
-            Navigator.of(context).pushReplacement(
+            Navigator.of(context).push(
               PageRouteBuilder(
                 pageBuilder: (context, animation, secondaryAnimation) =>
                     Dashboard(),
