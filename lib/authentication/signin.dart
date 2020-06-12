@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:darkPix/authentication/signup.dart';
 import 'package:darkPix/authentication/forgotpassword.dart';
+import 'package:darkPix/dashboard/dashboard.dart';
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -180,7 +181,14 @@ class _SignInScreenState extends State<SignInScreen> {
         height: 50,
         child: RaisedButton(
           color: Colors.white,
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).pushReplacement(
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    Dashboard(),
+              ),
+            );
+          },
           child: Text(
             'Sign In',
             style: TextStyle(fontSize: 16),
