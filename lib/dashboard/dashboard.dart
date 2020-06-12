@@ -3,6 +3,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:darkPix/dashboard/bottom_nav_bar.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -14,6 +15,7 @@ class _DashboardState extends State<Dashboard> {
   int cur_page = 1;
   String cur_category = 'fashion';
   ScrollController _controller;
+  var _selectedIndex = 0;
 
   _scrollListner() {
     if (_controller.position.atEdge) {
@@ -29,7 +31,7 @@ class _DashboardState extends State<Dashboard> {
 
   void fetchAlbum(page, category, refresh) async {
     final response = await http.get(
-        'https://api.unsplash.com/photos/random?client_id=zu8gZp8_xoBcEwA2Mxg-s6Ky4ghDtrYeBUpyNm_KXC0&count=10&query=' +
+        'https://api.unsplash.com/photos/random?client_id=zu8gZp8_xoBcEwA2Mxg-s6Ky4ghDtrYeBUpyNm_KXC0&count=30&query=' +
             category +
             '&page=' +
             page.toString());
@@ -56,6 +58,12 @@ class _DashboardState extends State<Dashboard> {
     _controller.addListener(_scrollListner);
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -77,24 +85,78 @@ class _DashboardState extends State<Dashboard> {
         automaticallyImplyLeading: false,
       ),
       body: Container(
-        child: Column(
-          children: <Widget>[
-            Container(
-              height: 60,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: <Widget>[
-                  _categoryItem('popular'),
-                  _categoryItem('natural'),
-                  _categoryItem('fashion'),
-                ],
+          child: Stack(
+        children: <Widget>[
+          Column(
+            children: <Widget>[
+              Container(
+                height: 60,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: <Widget>[
+                    _categoryItem('popular'),
+                    _categoryItem('natural'),
+                    _categoryItem('fashion'),
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: _addAlbum(),
-            )
-          ],
+              Expanded(
+                child: _addAlbum(),
+              )
+            ],
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              // BottomNavigationBar(
+              //   backgroundColor: Color.fromARGB(150, 0, 0, 0),
+              //   items: const <BottomNavigationBarItem>[
+              //     BottomNavigationBarItem(
+              //       icon: Icon(Icons.home),
+              //       title: Text('Home'),
+              //     ),
+              //     BottomNavigationBarItem(
+              //       icon: Icon(Icons.business),
+              //       title: Text('Business'),
+              //     ),
+              //     BottomNavigationBarItem(
+              //       icon: Icon(Icons.school),
+              //       title: Text('School'),
+              //     ),
+              //   ],
+              //   currentIndex: _selectedIndex,
+              //   selectedItemColor: Colors.amber[800],
+              //   unselectedItemColor: Colors.white,
+              //   onTap: (_onItemTapped),
+              // ),
+            ],
+          )
+        ],
+      )),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        tooltip: 'Increment',
+        child: Icon(Icons.add),
+        backgroundColor: Colors.deepOrangeAccent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(30.0)),
         ),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: FABBottomAppBar(
+        centerItemText: 'A',
+        color: Colors.grey,
+        selectedColor: Colors.red,
+        notchedShape: CircularNotchedRectangle(),
+        onTabSelected: _onItemTapped,
+        items: [
+          FABBottomAppBarItem(iconData: Icons.menu, text: 'This'),
+          FABBottomAppBarItem(iconData: Icons.layers, text: 'Is'),
+          FABBottomAppBarItem(iconData: Icons.dashboard, text: 'Bottom'),
+          FABBottomAppBarItem(iconData: Icons.info, text: 'Bar'),
+        ],
       ),
     );
   }
@@ -172,7 +234,7 @@ class _DashboardState extends State<Dashboard> {
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(4.0)),
             ),
-            child: Image.network(item['urls']['small']),
+            child: Image.network(item['urls']['thumb']),
           );
         }).toList(),
 
