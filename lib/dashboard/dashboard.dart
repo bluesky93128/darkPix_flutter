@@ -110,27 +110,20 @@ class _DashboardState extends State<Dashboard> {
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
-              // BottomNavigationBar(
-              //   backgroundColor: Color.fromARGB(150, 0, 0, 0),
-              //   items: const <BottomNavigationBarItem>[
-              //     BottomNavigationBarItem(
-              //       icon: Icon(Icons.home),
-              //       title: Text('Home'),
-              //     ),
-              //     BottomNavigationBarItem(
-              //       icon: Icon(Icons.business),
-              //       title: Text('Business'),
-              //     ),
-              //     BottomNavigationBarItem(
-              //       icon: Icon(Icons.school),
-              //       title: Text('School'),
-              //     ),
-              //   ],
-              //   currentIndex: _selectedIndex,
-              //   selectedItemColor: Colors.amber[800],
-              //   unselectedItemColor: Colors.white,
-              //   onTap: (_onItemTapped),
-              // ),
+              FABBottomAppBar(
+                centerItemText: 'A',
+                color: Colors.grey,
+                selectedColor: Colors.orange,
+                notchedShape: CircularNotchedRectangle(),
+                onTabSelected: _onItemTapped,
+                items: [
+                  FABBottomAppBarItem(iconData: Icons.offline_bolt),
+                  FABBottomAppBarItem(iconData: Icons.search),
+                  FABBottomAppBarItem(
+                      iconData: Icons.grade),
+                  FABBottomAppBarItem(iconData: Icons.account_circle),
+                ],
+              ),
             ],
           )
         ],
@@ -138,26 +131,13 @@ class _DashboardState extends State<Dashboard> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         tooltip: 'Increment',
-        child: Icon(Icons.add),
-        backgroundColor: Colors.deepOrangeAccent,
+        child: Icon(Icons.camera_alt, color: Colors.black,),
+        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(30.0)),
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: FABBottomAppBar(
-        centerItemText: 'A',
-        color: Colors.grey,
-        selectedColor: Colors.red,
-        notchedShape: CircularNotchedRectangle(),
-        onTabSelected: _onItemTapped,
-        items: [
-          FABBottomAppBarItem(iconData: Icons.menu, text: 'This'),
-          FABBottomAppBarItem(iconData: Icons.layers, text: 'Is'),
-          FABBottomAppBarItem(iconData: Icons.dashboard, text: 'Bottom'),
-          FABBottomAppBarItem(iconData: Icons.info, text: 'Bar'),
-        ],
-      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 

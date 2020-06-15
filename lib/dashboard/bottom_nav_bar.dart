@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class FABBottomAppBarItem {
-  FABBottomAppBarItem({this.iconData, this.text});
+  FABBottomAppBarItem({this.iconData});
   IconData iconData;
-  String text;
+  // String text;
 }
 
 class FABBottomAppBar extends StatefulWidget {
@@ -62,7 +62,7 @@ class FABBottomAppBarState extends State<FABBottomAppBar> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: items,
       ),
-      // color: widget.backgroundColor,
+      color: Color.fromARGB(180, 0, 0, 0),
     );
   }
 
@@ -103,10 +103,10 @@ class FABBottomAppBarState extends State<FABBottomAppBar> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Icon(item.iconData, color: color, size: widget.iconSize),
-                Text(
-                  item.text,
-                  style: TextStyle(color: color),
-                )
+                // Text(
+                //   item.text,
+                //   style: TextStyle(color: color),
+                // )
               ],
             ),
           ),
