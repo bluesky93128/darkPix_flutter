@@ -56,13 +56,13 @@ class FABBottomAppBarState extends State<FABBottomAppBar> {
     items.insert(items.length >> 1, _buildMiddleTabItem());
 
     return BottomAppBar(
-      shape: widget.notchedShape,
+      // shape: widget.notchedShape,
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: items,
       ),
-      color: Color.fromARGB(180, 0, 0, 0),
+      color: Color.fromARGB(200, 0, 0, 0),
     );
   }
 

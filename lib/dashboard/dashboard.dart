@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:darkPix/dashboard/bottom_nav_bar.dart';
+import 'package:darkPix/dashboard/preview.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -119,8 +120,7 @@ class _DashboardState extends State<Dashboard> {
                 items: [
                   FABBottomAppBarItem(iconData: Icons.offline_bolt),
                   FABBottomAppBarItem(iconData: Icons.search),
-                  FABBottomAppBarItem(
-                      iconData: Icons.grade),
+                  FABBottomAppBarItem(iconData: Icons.grade),
                   FABBottomAppBarItem(iconData: Icons.account_circle),
                 ],
               ),
@@ -131,7 +131,10 @@ class _DashboardState extends State<Dashboard> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         tooltip: 'Increment',
-        child: Icon(Icons.camera_alt, color: Colors.black,),
+        child: Icon(
+          Icons.camera_alt,
+          color: Colors.black,
+        ),
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(30.0)),
@@ -214,7 +217,25 @@ class _DashboardState extends State<Dashboard> {
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(4.0)),
             ),
-            child: Image.network(item['urls']['thumb']),
+            child: InkWell(
+              onTap: () {
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        ImagePreviewScreen(
+                      imgPath: item['urls']['regular'],
+                      userInfo: item['user']['links']['self'],
+                      likes: item['likes'],
+                      likedByUser: item['liked_by_user'],
+                      description: item['description'] != null
+                          ? item['description']
+                          : item['alt_description'],
+                    ),
+                  ),
+                );
+              },
+              child: Image.network(item['urls']['thumb']),
+            ),
           );
         }).toList(),
 
