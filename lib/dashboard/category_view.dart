@@ -47,6 +47,8 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
         }
       });
     } else {
+      print('**********************************');
+      print(widget.category);
       throw Exception('Failed to load album');
     }
   }

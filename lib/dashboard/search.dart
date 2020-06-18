@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:random_words/random_words.dart';
 import 'package:darkPix/dashboard/category_view.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
-class SearchPage extends StatelessWidget {
+class SearchPage extends StatefulWidget {
+  @override
+  _SearchPageState createState() => _SearchPageState();
+}
+
+class _SearchPageState extends State<SearchPage> {
   List tags = generateNoun(maxSyllables: 4).take(15).toList();
+  bool isTagsExpanded = false;
+  String searchText = '';
+
   var category = [
     'animal',
     'architecture',
@@ -22,43 +34,98 @@ class SearchPage extends StatelessWidget {
     var width = MediaQuery.of(context).size.width;
     return Column(children: <Widget>[
       _searchBox(),
-      _trendingTags(),
+      _trendingTags(context),
       _category(width, context),
     ]);
   }
 
   _searchBox() {
     return Padding(
-      padding: EdgeInsets.only(top: 5),
-      child: TextField(
-        style: TextStyle(color: Colors.white),
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.zero,
-          fillColor: Colors.white24,
-          filled: true,
-          border: new OutlineInputBorder(
-            borderRadius: const BorderRadius.all(
-              const Radius.circular(10.0),
-            ),
-            borderSide: BorderSide(
-              width: 0,
-              style: BorderStyle.none,
-            ),
+        padding: EdgeInsets.only(top: 5),
+        // child: TextField(
+        //   onChanged: (text) {
+        //     setState(() {
+        //       searchText = text;
+        //     });
+        //   },
+        //   onEditingComplete: () {
+        //     onPressCategory(context, searchText);
+        //   },
+        //   style: TextStyle(color: Colors.white),
+        //   decoration: InputDecoration(
+        //     contentPadding: EdgeInsets.zero,
+        //     fillColor: Colors.white24,
+        //     filled: true,
+        //     border: new OutlineInputBorder(
+        //       borderRadius: const BorderRadius.all(
+        //         const Radius.circular(10.0),
+        //       ),
+        //       borderSide: BorderSide(
+        //         width: 0,
+        //         style: BorderStyle.none,
+        //       ),
+        //     ),
+        //     prefixIcon: Icon(
+        //       Icons.search,
+        //       color: Colors.white,
+        //     ),
+        //     suffixIcon: IconButton(
+        //       icon: Icon(Icons.filter_list, color: Colors.white),
+        //       onPressed: () {
+
+        //       },
+        //     ),
+        //     hintText: 'Search',
+        //     hintStyle: TextStyle(color: Colors.white70),
+        //   ),
+        //   autofocus: false,
+        // ),
+        child: TypeAheadField(
+          textFieldConfiguration: TextFieldConfiguration(
+              autofocus: true,
+              style: TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.zero,
+                fillColor: Colors.white24,
+                filled: true,
+                border: new OutlineInputBorder(
+                  borderRadius: const BorderRadius.all(
+                    const Radius.circular(10.0),
+                  ),
+                  borderSide: BorderSide(
+                    width: 0,
+                    style: BorderStyle.none,
+                  ),
+                ),
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Colors.white,
+                ),
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.filter_list, color: Colors.white),
+                  onPressed: () {
+
+                  },
+                ),
+                hintText: 'Search',
+                hintStyle: TextStyle(color: Colors.white70),
+              ),
           ),
-          prefixIcon: Icon(
-            Icons.search,
-            color: Colors.white,
-          ),
-          suffixIcon: Icon(Icons.dns, color: Colors.white),
-          hintText: 'Search',
-          hintStyle: TextStyle(color: Colors.white70),
-        ),
-        autofocus: false,
-      ),
-    );
+          suggestionsCallback: (pattern) async {
+            return await _getSuggestions(pattern);
+          },
+          itemBuilder: (context, suggestion) {
+            return ListTile(
+              title: Text(suggestion['word']),
+            );
+          },
+          onSuggestionSelected: (suggestion) {
+            onPressCategory(context, suggestion['word']);
+          },
+        ));
   }
 
-  _trendingTags() {
+  _trendingTags(context) {
     return Padding(
       padding: EdgeInsets.all(10),
       child: Column(
@@ -78,36 +145,60 @@ class SearchPage extends StatelessWidget {
             children: tags.asMap().entries.map((e) {
               int idx = e.key;
               String val = e.value.toString();
-              if (idx < 5) {
+              if (isTagsExpanded) {
                 return ButtonTheme(
                   minWidth: 10,
                   buttonColor: Colors.white,
                   child: Padding(
                     padding: EdgeInsets.only(left: 3, right: 3),
                     child: RaisedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        onPressCategory(context, val);
+                      },
                       child: Text(
                         val,
                       ),
                     ),
                   ),
                 );
-              } else if (idx == 5) {
-                return ButtonTheme(
-                  minWidth: 10,
-                  buttonColor: Colors.grey,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 3, right: 3),
-                    child: RaisedButton(
-                      onPressed: () {},
-                      child: Text(
-                        '10+',
+              } else {
+                if (idx < 5) {
+                  return ButtonTheme(
+                    minWidth: 10,
+                    buttonColor: Colors.white,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 3, right: 3),
+                      child: RaisedButton(
+                        onPressed: () {
+                          onPressCategory(context, val);
+                        },
+                        child: Text(
+                          val,
+                        ),
                       ),
                     ),
-                  ),
-                );
-              } else {
-                return Container();
+                  );
+                } else if (idx == 5) {
+                  return ButtonTheme(
+                    minWidth: 10,
+                    buttonColor: Colors.grey,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 3, right: 3),
+                      child: RaisedButton(
+                        onPressed: () {
+                          setState(() {
+                            isTagsExpanded = true;
+                          });
+                        },
+                        child: Text(
+                          '10+',
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
+                  return Container();
+                }
               }
             }).toList(),
           ),
@@ -149,13 +240,7 @@ class SearchPage extends StatelessWidget {
       padding: EdgeInsets.all(5),
       child: GestureDetector(
         onTap: () {
-          Navigator.of(context).push(
-            PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    CategoryViewPage(
-                      category: asset,
-                    )),
-          );
+          onPressCategory(context, asset);
         },
         child: Container(
           decoration: BoxDecoration(
@@ -211,6 +296,28 @@ class SearchPage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  _getSuggestions(pattern) async {
+    final response = await http.get('https://api.datamuse.com/sug?s='+pattern+'&max=3');
+
+    if (response.statusCode == 200) {
+      print('---------------------------------');
+      print(pattern);
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to load album');
+    }
+  }
+
+  void onPressCategory(context, String asset) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              CategoryViewPage(
+                category: asset,
+              )),
     );
   }
 }
