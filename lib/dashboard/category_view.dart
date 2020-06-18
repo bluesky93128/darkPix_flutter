@@ -5,17 +5,19 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:darkPix/dashboard/preview.dart';
 
-class DashboardMainPage extends StatefulWidget {
+class CategoryViewPage extends StatefulWidget {
+  final category;
+
+  CategoryViewPage({this.category});
+
   @override
-  _DashboardMainPageState createState() => _DashboardMainPageState();
+  _CategoryViewPageState createState() => _CategoryViewPageState();
 }
 
-class _DashboardMainPageState extends State<DashboardMainPage> {
+class _CategoryViewPageState extends State<CategoryViewPage> {
   List albumData = new List();
   int cur_page = 1;
-  String cur_category = 'fashion';
   ScrollController _controller;
-  var category = ['popular', 'natural', 'fashion'];
 
   _scrollListner() {
     if (_controller.position.atEdge) {
@@ -23,16 +25,16 @@ class _DashboardMainPageState extends State<DashboardMainPage> {
       } else {
         setState(() {
           cur_page = cur_page + 1;
-          fetchAlbum(cur_page, cur_category, false);
+          fetchAlbum(cur_page, false);
         });
       }
     }
   }
 
-  void fetchAlbum(page, category, refresh) async {
+  void fetchAlbum(page, refresh) async {
     final response = await http.get(
         'https://api.unsplash.com/photos/random?client_id=zu8gZp8_xoBcEwA2Mxg-s6Ky4ghDtrYeBUpyNm_KXC0&count=30&query=' +
-            category +
+            widget.category +
             '&page=' +
             page.toString());
 
@@ -53,7 +55,7 @@ class _DashboardMainPageState extends State<DashboardMainPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    fetchAlbum(cur_page, cur_category, true);
+    fetchAlbum(cur_page, true);
     _controller = ScrollController();
     _controller.addListener(_scrollListner);
   }
@@ -61,83 +63,35 @@ class _DashboardMainPageState extends State<DashboardMainPage> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Column(
-      children: <Widget>[
-        Container(
-          height: 60,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            // children: <Widget>[
-            //   _categoryItem('popular'),
-            //   _categoryItem('natural'),
-            //   _categoryItem('fashion'),
-            // ],
-            children: category.map<Widget>((e) {
-              return _categoryItem(e.toString());
-            }).toList(),
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        title: Text(
+          'Back',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.transparent,
+      ),
+      body: Column(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(left: 10),
+            child: Row(
+              children: <Widget>[
+                Text(
+                  widget.category[0].toUpperCase() +
+                      widget.category.substring(1),
+                  style: TextStyle(color: Colors.white, fontSize: 40),
+                  textAlign: TextAlign.left,
+                ),
+                Spacer(),
+              ],
+            ),
           ),
-        ),
-        Expanded(
-          child: _addAlbum(),
-        )
-      ],
-    );
-  }
-
-  _categoryItem(String asset) {
-    return Padding(
-      padding: EdgeInsets.only(left: 10),
-      child: GestureDetector(
-        onTap: () {
-          setState(() {
-            cur_page = 1;
-            cur_category = asset;
-            fetchAlbum(cur_page, cur_category, true);
-          });
-        },
-        child: Stack(
-          children: <Widget>[
-            Container(
-              width: 150,
-              decoration: BoxDecoration(
-                // color: const Color(0xff7c94b6),
-                image: new DecorationImage(
-                  fit: BoxFit.cover,
-                  image:
-                      new AssetImage('lib/assets/img/cart-' + asset + '.png'),
-                ),
-              ),
-              // child: Image.asset(asset),
-            ),
-            Container(
-              width: 150,
-              decoration: BoxDecoration(
-                // color: const Color(0xff7c94b6),
-                image: new DecorationImage(
-                  fit: BoxFit.cover,
-                  colorFilter: ColorFilter.mode(
-                      Colors.black.withOpacity(0.5), BlendMode.dstATop),
-                  image: new AssetImage(
-                    'lib/assets/img/cart-overlay.png',
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              width: 150,
-              child: Center(
-                child: Text(
-                  asset[0].toUpperCase() + asset.substring(1),
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-          ],
-        ),
+          Expanded(
+            child: _addAlbum(),
+          )
+        ],
       ),
     );
   }
