@@ -82,7 +82,7 @@ class _SearchPageState extends State<SearchPage> {
         // ),
         child: TypeAheadField(
           textFieldConfiguration: TextFieldConfiguration(
-              autofocus: true,
+              autofocus: false,
               style: TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.zero,
