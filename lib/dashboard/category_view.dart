@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:darkPix/dashboard/preview.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CategoryViewPage extends StatefulWidget {
   final category;
@@ -18,6 +19,9 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
   List albumData = new List();
   int cur_page = 1;
   ScrollController _controller;
+  String orientation;
+  String color;
+  String quality;
 
   _scrollListner() {
     if (_controller.position.atEdge) {
@@ -25,30 +29,33 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
       } else {
         setState(() {
           cur_page = cur_page + 1;
-          fetchAlbum(cur_page, false);
+          fetchAlbum(cur_page, false, orientation, color);
         });
       }
     }
   }
 
-  void fetchAlbum(page, refresh) async {
+  void fetchAlbum(page, refresh, orientation, color) async {
     final response = await http.get(
-        'https://api.unsplash.com/photos/random?client_id=zu8gZp8_xoBcEwA2Mxg-s6Ky4ghDtrYeBUpyNm_KXC0&count=30&query=' +
+        'https://api.unsplash.com/search/photos?client_id=zu8gZp8_xoBcEwA2Mxg-s6Ky4ghDtrYeBUpyNm_KXC0&per_page=30&query=' +
             widget.category +
             '&page=' +
-            page.toString());
+            page.toString() +
+            '&orientation=' +
+            orientation +
+            '&color=' +
+            color);
 
     if (response.statusCode == 200) {
       setState(() {
+        var temp = json.decode(response.body);
         if (!refresh) {
-          albumData.addAll(json.decode(response.body));
+          albumData.addAll(temp['results']);
         } else {
-          albumData = json.decode(response.body);
+          albumData = temp['results'];
         }
       });
     } else {
-      print('**********************************');
-      print(widget.category);
       throw Exception('Failed to load album');
     }
   }
@@ -57,9 +64,17 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    fetchAlbum(cur_page, true);
+    _getSearchSettings();
     _controller = ScrollController();
     _controller.addListener(_scrollListner);
+  }
+
+  _getSearchSettings() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    orientation = prefs.getString('orientation');
+    color = prefs.getString('color');
+    quality = prefs.getString('quality');
+    fetchAlbum(cur_page, true, orientation, color);
   }
 
   @override

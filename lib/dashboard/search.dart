@@ -42,44 +42,6 @@ class _SearchPageState extends State<SearchPage> {
   _searchBox() {
     return Padding(
         padding: EdgeInsets.only(top: 5),
-        // child: TextField(
-        //   onChanged: (text) {
-        //     setState(() {
-        //       searchText = text;
-        //     });
-        //   },
-        //   onEditingComplete: () {
-        //     onPressCategory(context, searchText);
-        //   },
-        //   style: TextStyle(color: Colors.white),
-        //   decoration: InputDecoration(
-        //     contentPadding: EdgeInsets.zero,
-        //     fillColor: Colors.white24,
-        //     filled: true,
-        //     border: new OutlineInputBorder(
-        //       borderRadius: const BorderRadius.all(
-        //         const Radius.circular(10.0),
-        //       ),
-        //       borderSide: BorderSide(
-        //         width: 0,
-        //         style: BorderStyle.none,
-        //       ),
-        //     ),
-        //     prefixIcon: Icon(
-        //       Icons.search,
-        //       color: Colors.white,
-        //     ),
-        //     suffixIcon: IconButton(
-        //       icon: Icon(Icons.filter_list, color: Colors.white),
-        //       onPressed: () {
-
-        //       },
-        //     ),
-        //     hintText: 'Search',
-        //     hintStyle: TextStyle(color: Colors.white70),
-        //   ),
-        //   autofocus: false,
-        // ),
         child: TypeAheadField(
           textFieldConfiguration: TextFieldConfiguration(
               autofocus: false,
