@@ -1,3 +1,4 @@
+import 'package:darkPix/dashboard/search_setting.dart';
 import 'package:flutter/material.dart';
 import 'package:random_words/random_words.dart';
 import 'package:darkPix/dashboard/category_view.dart';
@@ -44,34 +45,38 @@ class _SearchPageState extends State<SearchPage> {
         padding: EdgeInsets.only(top: 5),
         child: TypeAheadField(
           textFieldConfiguration: TextFieldConfiguration(
-              autofocus: false,
-              style: TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.zero,
-                fillColor: Colors.white24,
-                filled: true,
-                border: new OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(
-                    const Radius.circular(10.0),
-                  ),
-                  borderSide: BorderSide(
-                    width: 0,
-                    style: BorderStyle.none,
-                  ),
+            autofocus: false,
+            style: TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.zero,
+              fillColor: Colors.white24,
+              filled: true,
+              border: new OutlineInputBorder(
+                borderRadius: const BorderRadius.all(
+                  const Radius.circular(10.0),
                 ),
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: Colors.white,
+                borderSide: BorderSide(
+                  width: 0,
+                  style: BorderStyle.none,
                 ),
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.filter_list, color: Colors.white),
-                  onPressed: () {
-
-                  },
-                ),
-                hintText: 'Search',
-                hintStyle: TextStyle(color: Colors.white70),
               ),
+              prefixIcon: Icon(
+                Icons.search,
+                color: Colors.white,
+              ),
+              suffixIcon: IconButton(
+                icon: Icon(Icons.filter_list, color: Colors.white),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            SearchSettingsPage()),
+                  );
+                },
+              ),
+              hintText: 'Search',
+              hintStyle: TextStyle(color: Colors.white70),
+            ),
           ),
           suggestionsCallback: (pattern) async {
             return await _getSuggestions(pattern);
@@ -119,6 +124,7 @@ class _SearchPageState extends State<SearchPage> {
                       },
                       child: Text(
                         val,
+                        style: TextStyle(color: Colors.black),
                       ),
                     ),
                   ),
@@ -136,6 +142,7 @@ class _SearchPageState extends State<SearchPage> {
                         },
                         child: Text(
                           val,
+                          style: TextStyle(color: Colors.black),
                         ),
                       ),
                     ),
@@ -262,7 +269,8 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   _getSuggestions(pattern) async {
-    final response = await http.get('https://api.datamuse.com/sug?s='+pattern+'&max=3');
+    final response =
+        await http.get('https://api.datamuse.com/sug?s=' + pattern + '&max=3');
 
     if (response.statusCode == 200) {
       print('---------------------------------');

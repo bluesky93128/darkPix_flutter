@@ -125,50 +125,6 @@ class _SignUpScreenState extends State<SignupScreen> {
     );
   }
 
-  _rememberAndForgotPassword() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width * 0.1,
-              10, MediaQuery.of(context).size.width * 0.1, 0),
-          child: GestureDetector(
-            child: Row(
-              children: <Widget>[
-                rememberMe
-                    ? Icon(
-                        Icons.check_box_outline_blank,
-                        color: Colors.white,
-                      )
-                    : Icon(
-                        Icons.check_box,
-                        color: Colors.white,
-                      ),
-                Text(
-                  'Remember Me',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ],
-            ),
-            onTap: () {
-              setState(() {
-                rememberMe = !rememberMe;
-              });
-            },
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.fromLTRB(
-              0, 10, MediaQuery.of(context).size.width * 0.1, 0),
-          child: Text(
-            'Forgot Password?',
-            style: TextStyle(color: Colors.white),
-          ),
-        )
-      ],
-    );
-  }
-
   _signinButton() {
     return Padding(
       padding: EdgeInsets.only(top: 24),
@@ -180,7 +136,7 @@ class _SignUpScreenState extends State<SignupScreen> {
           onPressed: () {},
           child: Text(
             'Sign Up',
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 16, color: Colors.black),
           ),
         ),
       ),
@@ -230,7 +186,7 @@ class _SignUpScreenState extends State<SignupScreen> {
                   width: MediaQuery.of(context).size.width * 0.39,
                   height: 50,
                   child: RaisedButton(
-                    child: Text('Facebook'),
+                    child: Text('Facebook', style: TextStyle(color: Colors.black),),
                     color: Colors.white,
                     onPressed: () {},
                   ),
@@ -239,7 +195,7 @@ class _SignUpScreenState extends State<SignupScreen> {
                   width: MediaQuery.of(context).size.width * 0.39,
                   height: 50,
                   child: RaisedButton(
-                    child: Text('Google'),
+                    child: Text('Google', style: TextStyle(color: Colors.black),),
                     color: Colors.white,
                     onPressed: () {},
                   ),

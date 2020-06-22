@@ -14,7 +14,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
-        bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.transparent)
+        bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.transparent),
+        brightness: Brightness.dark,
+        unselectedWidgetColor: Colors.white
       ),
       home: FirstOnboardingScreen(),
     );

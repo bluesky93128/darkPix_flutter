@@ -191,7 +191,7 @@ class _SignInScreenState extends State<SignInScreen> {
           },
           child: Text(
             'Sign In',
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 16, color: Colors.black),
           ),
         ),
       ),
@@ -241,7 +241,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   width: MediaQuery.of(context).size.width * 0.39,
                   height: 50,
                   child: RaisedButton(
-                    child: Text('Facebook'),
+                    child: Text('Facebook', style: TextStyle(color: Colors.black),),
                     color: Colors.white,
                     onPressed: () {},
                   ),
@@ -250,7 +250,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   width: MediaQuery.of(context).size.width * 0.39,
                   height: 50,
                   child: RaisedButton(
-                    child: Text('Google'),
+                    child: Text('Google', style: TextStyle(color: Colors.black),),
                     color: Colors.white,
                     onPressed: () {},
                   ),
