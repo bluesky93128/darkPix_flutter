@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchSettingsPage extends StatefulWidget {
   @override
@@ -6,8 +7,8 @@ class SearchSettingsPage extends StatefulWidget {
 }
 
 class _SearchSettingsPageState extends State<SearchSettingsPage> {
-  var _orientationValue = 'squarish';
-  var _qualityValue = 'low';
+  var _orientationValue;
+  var _qualityValue;
   var _availableColors = [
     'black_and_white',
     'black',
@@ -34,7 +35,14 @@ class _SearchSettingsPageState extends State<SearchSettingsPage> {
     Colors.teal,
     Colors.blue
   ];
-  String curColor = 'black_and_white';
+  String curColor;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _getSearchSettings();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +50,16 @@ class _SearchSettingsPageState extends State<SearchSettingsPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        leading: IconButton(icon: Icon(Icons.close), onPressed: () {}),
+        leading: IconButton(icon: Icon(Icons.close), onPressed: () {
+          Navigator.of(context).pop();
+        }),
         actions: <Widget>[
           RaisedButton(
             color: Colors.transparent,
-            onPressed: () {},
+            onPressed: () {
+              _setSearchSettings();
+              Navigator.of(context).pop();
+            },
             child: Text(
               'Apply',
               style: TextStyle(color: Colors.white, fontSize: 20),
@@ -66,9 +79,26 @@ class _SearchSettingsPageState extends State<SearchSettingsPage> {
     );
   }
 
+  _setSearchSettings() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('orientation', _orientationValue);
+    await prefs.setString('color', curColor);
+    await prefs.setString('quality', _qualityValue);
+  }
+
+  _getSearchSettings() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _orientationValue = prefs.getString('orientation');
+      curColor = prefs.getString('color');
+      _qualityValue = prefs.getString('quality');
+    });
+  }
+
   _handleOrientationChange(String value) {
     setState(() {
       _orientationValue = value;
+      
     });
   }
 
@@ -98,8 +128,8 @@ class _SearchSettingsPageState extends State<SearchSettingsPage> {
               children: <Widget>[
                 Radio<String>(
                   value: 'squarish',
-                  groupValue: _qualityValue,
-                  onChanged: _handleQualityChange,
+                  groupValue: _orientationValue,
+                  onChanged: _handleOrientationChange,
                 ),
                 Text(
                   'Any',
@@ -111,8 +141,8 @@ class _SearchSettingsPageState extends State<SearchSettingsPage> {
               children: <Widget>[
                 Radio<String>(
                   value: 'landscape',
-                  groupValue: _qualityValue,
-                  onChanged: _handleQualityChange,
+                  groupValue: _orientationValue,
+                  onChanged: _handleOrientationChange,
                 ),
                 Text(
                   'Landscape',
@@ -124,8 +154,8 @@ class _SearchSettingsPageState extends State<SearchSettingsPage> {
               children: <Widget>[
                 Radio<String>(
                   value: 'portrait',
-                  groupValue: _qualityValue,
-                  onChanged: _handleQualityChange,
+                  groupValue: _orientationValue,
+                  onChanged: _handleOrientationChange,
                 ),
                 Text(
                   'Portrait',
@@ -201,8 +231,8 @@ class _SearchSettingsPageState extends State<SearchSettingsPage> {
               children: <Widget>[
                 Radio<String>(
                   value: 'low',
-                  groupValue: _orientationValue,
-                  onChanged: _handleOrientationChange,
+                  groupValue: _qualityValue,
+                  onChanged: _handleQualityChange,
                 ),
                 Text(
                   'Low',
@@ -214,8 +244,8 @@ class _SearchSettingsPageState extends State<SearchSettingsPage> {
               children: <Widget>[
                 Radio<String>(
                   value: 'medium',
-                  groupValue: _orientationValue,
-                  onChanged: _handleOrientationChange,
+                  groupValue: _qualityValue,
+                  onChanged: _handleQualityChange,
                 ),
                 Text(
                   'Medium',
@@ -227,8 +257,8 @@ class _SearchSettingsPageState extends State<SearchSettingsPage> {
               children: <Widget>[
                 Radio<String>(
                   value: 'high',
-                  groupValue: _orientationValue,
-                  onChanged: _handleOrientationChange,
+                  groupValue: _qualityValue,
+                  onChanged: _handleQualityChange,
                 ),
                 Text(
                   'High',

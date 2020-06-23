@@ -36,7 +36,7 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
   }
 
   void fetchAlbum(page, refresh, orientation, color) async {
-    final response = await http.get(
+    var url =
         'https://api.unsplash.com/search/photos?client_id=zu8gZp8_xoBcEwA2Mxg-s6Ky4ghDtrYeBUpyNm_KXC0&per_page=30&query=' +
             widget.category +
             '&page=' +
@@ -44,7 +44,12 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
             '&orientation=' +
             orientation +
             '&color=' +
-            color);
+            color;
+
+    print('-----------------------------------------------');
+    print(url);
+
+    final response = await http.get(url);
 
     if (response.statusCode == 200) {
       setState(() {
@@ -134,7 +139,11 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
                   PageRouteBuilder(
                     pageBuilder: (context, animation, secondaryAnimation) =>
                         ImagePreviewScreen(
-                      imgPath: item['urls']['regular'],
+                      imgPath: quality == 'low'
+                          ? item['urls']['small']
+                          : quality == 'medium'
+                              ? item['urls']['regular']
+                              : item['urls']['full'],
                       userInfo: item['user']['links']['self'],
                       likes: item['likes'],
                       likedByUser: item['liked_by_user'],
